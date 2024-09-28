@@ -26,8 +26,7 @@ func HandleRequest(process func(), u *User) bool {
 	tick := time.NewTicker(time.Second)
 
 	go func() {
-		for range 10 {
-			<-tick.C
+		for range tick.C {
 			u.TimeUsed += 1
 		}
 	}()

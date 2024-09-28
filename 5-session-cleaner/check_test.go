@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -46,6 +47,7 @@ func TestSessionManagersCleaner(t *testing.T) {
 	// Note that the cleaner is only running every 5s
 	time.Sleep(7 * time.Second)
 	_, err = m.GetSessionData(sID)
+	fmt.Println(sID)
 	if err != ErrSessionNotFound {
 		t.Error("Session still in memory after 7 seconds")
 	}
