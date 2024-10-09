@@ -50,6 +50,8 @@ func NewSessionManager() *SessionManager {
 
 // CreateSession creates a new session and returns the sessionID
 func (m *SessionManager) CreateSession() (string, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	sessionID, err := MakeSessionID()
 	if err != nil {
 		return "", err
@@ -59,8 +61,6 @@ func (m *SessionManager) CreateSession() (string, error) {
 		Data:     make(map[string]interface{}),
 		LastUsed: time.Now(),
 	}
-	m.mu.Lock()
-	defer m.mu.Unlock()
 
 	return sessionID, nil
 }
@@ -85,13 +85,11 @@ func (m *SessionManager) DeleteSession() {
 
 	for range ticker.C {
 		m.mu.Lock()
-
 		for id, session := range m.sessions {
 			if time.Since(session.LastUsed) > 5*time.Second {
 				delete(m.sessions, id)
 			}
 		}
-
 		m.mu.Unlock()
 	}
 }

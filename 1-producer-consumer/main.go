@@ -38,12 +38,12 @@ func consumer(tweets <-chan *Tweet) {
 func main() {
 	start := time.Now()
 	stream := GetMockStream()
-	ch := make(chan *Tweet)
+	tweets := make(chan *Tweet)
 	// Producer
-	go producer(stream, ch)
+	go producer(stream, tweets)
 
 	// Consumer
-	consumer(ch)
+	consumer(tweets)
 
 	fmt.Printf("Process took %s\n", time.Since(start))
 }

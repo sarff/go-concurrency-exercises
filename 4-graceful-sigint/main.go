@@ -30,10 +30,10 @@ func main() {
 	go func() {
 		sig := <-sigs
 		fmt.Println("\nReceived signal:", sig)
-		go proc.Stop() // спроба зупинити процес
+		go proc.Stop() // try to stop process
 
-		// Чекаємо на другий сигнал
-		sig = <-sigs
+		// waiting second signal
+		<-sigs
 		fmt.Println("\nReceived second signal, force quitting.")
 		os.Exit(1)
 	}()
