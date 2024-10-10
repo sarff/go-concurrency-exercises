@@ -27,8 +27,8 @@ import (
 // SessionManager keeps track of all sessions from creation, updating
 // to destroying.
 type SessionManager struct {
-	sessions map[string]Session
 	mu       sync.Mutex
+	sessions map[string]Session
 }
 
 // Session stores the session's data
@@ -39,10 +39,10 @@ type Session struct {
 
 // NewSessionManager creates a new sessionManager
 func NewSessionManager() *SessionManager {
+
 	m := &SessionManager{
 		sessions: make(map[string]Session),
 	}
-
 	go m.DeleteSession()
 
 	return m
@@ -72,6 +72,8 @@ var ErrSessionNotFound = errors.New("SessionID does not exists")
 // GetSessionData returns data related to session if sessionID is
 // found, errors otherwise
 func (m *SessionManager) GetSessionData(sessionID string) (map[string]interface{}, error) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	session, ok := m.sessions[sessionID]
 	if !ok {
 		return nil, ErrSessionNotFound

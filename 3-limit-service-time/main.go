@@ -37,7 +37,7 @@ func HandleRequest(process func(), u *User) bool {
 	go func() {
 		for range tick.C {
 			u.mu.Lock()
-			u.TimeUsed += 1
+			u.TimeUsed++
 			u.mu.Unlock()
 		}
 	}()

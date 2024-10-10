@@ -13,16 +13,20 @@ import (
 	"time"
 )
 
-func producer(stream Stream, ch chan<- *Tweet) {
-	for {
-		tweet, err := stream.Next()
-		if err == ErrEOF {
-			close(ch)
-			return
-		}
+func producer(stream Stream) chan *Tweet {
+	tweets := make(chan *Tweet)
+	go func() {
+		for {
+			tweet, err := stream.Next()
+			if err == ErrEOF {
+				close(tweets)
+				return
+			}
 
-		ch <- tweet
-	}
+			tweets <- tweet
+		}
+	}()
+	return tweets
 }
 
 func consumer(tweets <-chan *Tweet) {
@@ -38,9 +42,8 @@ func consumer(tweets <-chan *Tweet) {
 func main() {
 	start := time.Now()
 	stream := GetMockStream()
-	tweets := make(chan *Tweet)
 	// Producer
-	go producer(stream, tweets)
+	tweets := producer(stream)
 
 	// Consumer
 	consumer(tweets)
