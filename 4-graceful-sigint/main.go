@@ -13,9 +13,30 @@
 
 package main
 
+import (
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
+)
+
 func main() {
 	// Create a process
 	proc := MockProcess{}
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT)
+
+	go func() {
+		sig := <-sigs
+		fmt.Println("\nReceived signal:", sig)
+		go proc.Stop() // try to stop process
+
+		// waiting second signal
+		<-sigs
+		fmt.Println("\nReceived second signal, force quitting.")
+		os.Exit(1)
+	}()
 
 	// Run the process (blocking)
 	proc.Run()
