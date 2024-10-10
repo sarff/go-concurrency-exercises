@@ -45,7 +45,7 @@ func HandleRequest(process func(), u *User) bool {
 	process()
 	u.mu.Lock()
 	defer u.mu.Unlock()
-	if u.TimeUsed >= 10 && !u.IsPremium {
+	if u.TimeUsed >= 10 {
 		return false
 	}
 	return true
