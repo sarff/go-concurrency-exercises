@@ -39,7 +39,6 @@ type Session struct {
 
 // NewSessionManager creates a new sessionManager
 func NewSessionManager() *SessionManager {
-
 	m := &SessionManager{
 		sessions: make(map[string]Session),
 	}

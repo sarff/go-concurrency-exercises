@@ -55,5 +55,4 @@ func TestLRU(t *testing.T) {
 	if _, ok := cache.cache["Test0"]; !ok {
 		t.Errorf("0 evicted incorrectly: %v", cache.cache)
 	}
-
 }
